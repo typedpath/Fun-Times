@@ -18,4 +18,8 @@ class PricingCalculatorTest {
         val price = target.priceInPence(listOf(ItemLine(soup, 3), ItemLine(bread, 2)), today)
         Assert.assertEquals(315, price)
     }
+
+    // Tests not in spec
+    // test discount validity periods
+
 }
