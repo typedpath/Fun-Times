@@ -8,6 +8,9 @@ import org.junit.Assert
 import org.junit.Test
 import java.time.LocalDate
 
+/**
+ * unit test for the pricing calculator
+ */
 class PricingCalculatorTest {
 
     val discountReferenceDate = LocalDate.now().plusDays(-1)
@@ -61,10 +64,6 @@ class PricingCalculatorTest {
     @Test
     fun testDayAfterBreadDiscountExpiry()  = test(listOf( ItemLine(soup, 2), ItemLine(bread, 1)), discountReferenceDate.plusDays(8), 210)
 
-
-
-
-    // test discount validity periods
     private fun test(itemLines: List<ItemLine>, pricingDate: LocalDate, expectedPrice: Int) {
         val price = target.priceInPence(itemLines, pricingDate)
         Assert.assertEquals(expectedPrice, price)
