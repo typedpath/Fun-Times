@@ -2,6 +2,7 @@ package grocery
 
 import java.io.BufferedReader
 import java.io.PrintStream
+import java.time.LocalDate
 
 /**
  * process items on the command line and prints out prices
@@ -13,7 +14,7 @@ class PricingCommandLineProcessor(val pricingCalculator: PricingCalculator,  val
     }
     private fun lookupStockItem(id: String) = stockItems.filter { it.product.equals(id) }.firstOrNull()
 
-    fun run(inputReader: BufferedReader, outputStream: PrintStream) {
+    fun run(inputReader: BufferedReader, outputStream: PrintStream, pricingDate: LocalDate) {
         var currentItems = mutableListOf<ItemLine>()
         inputReader.lines().forEach {
             val line = it.trim()
@@ -32,7 +33,7 @@ class PricingCommandLineProcessor(val pricingCalculator: PricingCalculator,  val
                 currentItems.add(ItemLine(stockItem, quantity))
 
             } else if (line.equals(PRICE_COMMAND)) {
-                val price = pricingCalculator.priceInPence(currentItems.toList())
+                val price = pricingCalculator.priceInPence(currentItems.toList(), pricingDate)
                 outputStream.println("$price")
                 currentItems.clear()
             }
