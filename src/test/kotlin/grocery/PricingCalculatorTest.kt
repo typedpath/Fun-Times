@@ -30,6 +30,14 @@ class PricingCalculatorTest {
 
     // Tests not in spec
     @Test
+    fun testDayBeforeAppleDiscountValid() {
+        var appleDiscountExpiryDate = discountReferenceDate.plusDays(2).plusMonths(2)
+        appleDiscountExpiryDate = appleDiscountExpiryDate.plusDays(-appleDiscountExpiryDate.dayOfMonth.toLong() + 1)
+        println("testDayBeforeAppleDiscountExpiry discountReferenceDate=$discountReferenceDate pricingDateEnd=$appleDiscountExpiryDate ")
+        test(listOf(ItemLine(apples, 1)), appleDiscountExpiryDate, apples.costInPence)
+    }
+
+    @Test
     fun testDayBeforeAppleDiscountExpiry() {
         var pricingDateEnd = discountReferenceDate.plusDays(3).plusMonths(2)
         pricingDateEnd = pricingDateEnd.plusDays(-pricingDateEnd.dayOfMonth.toLong())
@@ -44,6 +52,16 @@ class PricingCalculatorTest {
         println("testDayBeforeAppleDiscountExpiry discountReferenceDate=$discountReferenceDate pricingDateEnd=$appleDiscountExpiryDate ")
         test(listOf(ItemLine(apples, 1)), appleDiscountExpiryDate, apples.costInPence)
     }
+
+    //check bread discount validity period
+    @Test
+    fun testDayBeforeBreadDiscountValid()  = test(listOf( ItemLine(soup, 2), ItemLine(bread, 1)), discountReferenceDate.minusDays(2), 210)
+    @Test
+    fun testDayAfterBreadDiscountValid()  = test(listOf( ItemLine(soup, 2), ItemLine(bread, 1)), discountReferenceDate.minusDays(1), 170)
+    @Test
+    fun testDayAfterBreadDiscountExpiry()  = test(listOf( ItemLine(soup, 2), ItemLine(bread, 1)), discountReferenceDate.plusDays(8), 210)
+
+
 
 
     // test discount validity periods
