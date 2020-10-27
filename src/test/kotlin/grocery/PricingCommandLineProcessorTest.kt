@@ -15,6 +15,9 @@ import java.io.PrintStream
 import java.io.StringReader
 import java.time.LocalDate
 
+/**
+ * unit test for the command line processor
+ */
 class PricingCommandLineProcessorTest {
 
    @Before
