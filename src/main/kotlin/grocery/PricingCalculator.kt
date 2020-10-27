@@ -29,12 +29,18 @@ class PricingCalculator(val discountReferenceDate: LocalDate
 
     private fun calculateApplesPriceDiscount(itemLines: List<ItemLine>, pricingDate: LocalDate) : Int {
         // check after start date
-        if (pricingDate< discountReferenceDate.plusDays(5)) {
+        val pricingStartDate = discountReferenceDate.plusDays(3)
+        if (pricingDate < pricingStartDate) {
             return 0
         }
-        //TODO check before end date
+        //check before end date
+        var discountEndDate = pricingStartDate.plusMonths(2)
+        discountEndDate = discountEndDate.plusDays(-discountEndDate.dayOfMonth.toLong())
+        if (pricingDate >= discountEndDate ) {
+            return 0
+        }
+
         val appleCount = countByType(itemLines, apples)
-        val loafCount = countByType(itemLines, bread)
         return ((appleCount * apples.costInPence).toDouble() * 0.1).roundToInt()
     }
 

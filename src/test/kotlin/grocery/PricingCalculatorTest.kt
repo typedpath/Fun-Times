@@ -10,7 +10,7 @@ import java.time.LocalDate
 
 class PricingCalculatorTest {
 
-    val discountReferenceDate = LocalDate.now()
+    val discountReferenceDate = LocalDate.now().plusDays(-1)
     val today = LocalDate.now()
     val fiveDaysTime = today.plusDays(5)
     val target = PricingCalculator(discountReferenceDate)
@@ -28,10 +28,25 @@ class PricingCalculatorTest {
     @Test
     fun test3Apples2Soup1Bread() =  test(listOf(ItemLine(apples, 3), ItemLine(soup, 2), ItemLine(bread, 1)), fiveDaysTime, 197)
 
-
     // Tests not in spec
-    // test discount validity periods
+    @Test
+    fun testDayBeforeAppleDiscountExpiry() {
+        var pricingDateEnd = discountReferenceDate.plusDays(3).plusMonths(2)
+        pricingDateEnd = pricingDateEnd.plusDays(-pricingDateEnd.dayOfMonth.toLong())
+        println("testDayBeforeAppleDiscountExpiry discountReferenceDate=$discountReferenceDate pricingDateEnd=$pricingDateEnd ")
+        test(listOf(ItemLine(apples, 1)), fiveDaysTime, (apples.costInPence.toDouble() * 0.9).toInt())
+    }
 
+    @Test
+    fun testDayAfterAppleDiscountExpiry() {
+        var appleDiscountExpiryDate = discountReferenceDate.plusDays(3).plusMonths(2)
+        appleDiscountExpiryDate = appleDiscountExpiryDate.plusDays(-appleDiscountExpiryDate.dayOfMonth.toLong() + 1)
+        println("testDayBeforeAppleDiscountExpiry discountReferenceDate=$discountReferenceDate pricingDateEnd=$appleDiscountExpiryDate ")
+        test(listOf(ItemLine(apples, 1)), appleDiscountExpiryDate, apples.costInPence)
+    }
+
+
+    // test discount validity periods
     private fun test(itemLines: List<ItemLine>, pricingDate: LocalDate, expectedPrice: Int) {
         val price = target.priceInPence(itemLines, pricingDate)
         Assert.assertEquals(expectedPrice, price)
